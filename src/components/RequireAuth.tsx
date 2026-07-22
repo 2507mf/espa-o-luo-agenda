@@ -19,7 +19,7 @@ export function RequireAuth({
   useEffect(() => {
     if (loading) return;
     if (!session) {
-      void navigate({ to: "/auth" });
+      void navigate({ to: "/" });
     } else if (adminOnly && !isAdmin) {
       void navigate({ to: "/agenda" });
     }

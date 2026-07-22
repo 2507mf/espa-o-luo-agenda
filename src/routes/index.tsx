@@ -1,6 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
-import luoLogo from "@/assets/luo-logo.png.asset.json";
+import { AuthCard } from "@/components/AuthCard";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,17 +21,20 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const navigate = useNavigate();
+  const { session, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && session) {
+      void navigate({ to: "/agenda" });
+    }
+  }, [loading, session, navigate]);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--luo-beige)" }}>
       <SiteHeader />
-      <main className="flex flex-col items-center justify-center px-6 py-24 text-center">
-        <img src={luoLogo.url} alt="Espaço Luo" className="h-24 md:h-32 w-auto" />
-        <p
-          className="mt-8 max-w-xl text-base md:text-lg"
-          style={{ fontFamily: "Archivo, sans-serif", color: "var(--luo-sage-dark)" }}
-        >
-          Sistema de agendamento de consultórios do Espaço Luo. Simples, tranquilo e feito para o seu ritmo.
-        </p>
+      <main className="flex flex-col items-center justify-center px-6 py-16">
+        <AuthCard />
       </main>
     </div>
   );
