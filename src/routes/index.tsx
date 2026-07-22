@@ -1,24 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { SiteHeader } from "@/components/SiteHeader";
+import luoLogo from "@/assets/luo-logo.png.asset.json";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Espaço Luo — Agendamento de Salas" },
+      {
+        name: "description",
+        content:
+          "Reserve consultórios no Espaço Luo, em Recife. Agenda simples e elegante para profissionais de terapias integrativas.",
+      },
+      { property: "og:title", content: "Espaço Luo — Agendamento de Salas" },
+      { property: "og:description", content: "Sistema de agendamento de consultórios do Espaço Luo." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen" style={{ backgroundColor: "var(--luo-beige)" }}>
+      <SiteHeader />
+      <main className="flex flex-col items-center justify-center px-6 py-24 text-center">
+        <img src={luoLogo.url} alt="Espaço Luo" className="h-24 md:h-32 w-auto" />
+        <p
+          className="mt-8 max-w-xl text-base md:text-lg"
+          style={{ fontFamily: "Archivo, sans-serif", color: "var(--luo-sage-dark)" }}
+        >
+          Sistema de agendamento de consultórios do Espaço Luo. Simples, tranquilo e feito para o seu ritmo.
+        </p>
+      </main>
     </div>
   );
 }

@@ -63,8 +63,13 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  /* Luo brand tokens (paleta provis\u00f3ria \u2014 aguardando HEX oficiais) */
+  --luo-sage: #8AADA3;
+  --luo-sage-dark: #586E67;
+  --luo-beige: #F2E8D6;
+  --luo-mist: #CFD5D1;
+  --background: oklch(0.955 0.02 85);
+  --foreground: oklch(0.32 0.02 165);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
