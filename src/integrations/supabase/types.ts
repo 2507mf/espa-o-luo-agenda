@@ -17,20 +17,23 @@ export type Database = {
       profiles: {
         Row: {
           id: string
+          email: string
           full_name: string | null
-          email: string | null
+          phone: string | null
           created_at: string
         }
         Insert: {
           id: string
+          email: string
           full_name?: string | null
-          email?: string | null
+          phone?: string | null
           created_at?: string
         }
         Update: {
           id?: string
+          email?: string
           full_name?: string | null
-          email?: string | null
+          phone?: string | null
           created_at?: string
         }
         Relationships: []
@@ -61,21 +64,24 @@ export type Database = {
           id: string
           name: string
           description: string | null
-          active: boolean
+          capacity: number | null
+          is_active: boolean
           created_at: string
         }
         Insert: {
           id?: string
           name: string
           description?: string | null
-          active?: boolean
+          capacity?: number | null
+          is_active?: boolean
           created_at?: string
         }
         Update: {
           id?: string
           name?: string
           description?: string | null
-          active?: boolean
+          capacity?: number | null
+          is_active?: boolean
           created_at?: string
         }
         Relationships: []
@@ -87,6 +93,7 @@ export type Database = {
           user_id: string
           starts_at: string
           ends_at: string
+          status: Database["public"]["Enums"]["booking_status"]
           notes: string | null
           created_at: string
         }
@@ -96,6 +103,7 @@ export type Database = {
           user_id: string
           starts_at: string
           ends_at: string
+          status?: Database["public"]["Enums"]["booking_status"]
           notes?: string | null
           created_at?: string
         }
@@ -105,6 +113,7 @@ export type Database = {
           user_id?: string
           starts_at?: string
           ends_at?: string
+          status?: Database["public"]["Enums"]["booking_status"]
           notes?: string | null
           created_at?: string
         }
@@ -137,6 +146,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      booking_status: "confirmed" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -265,6 +275,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      booking_status: ["confirmed", "cancelled"],
     },
   },
 } as const

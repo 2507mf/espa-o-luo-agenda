@@ -16,7 +16,7 @@ export const Route = createFileRoute("/admin")({
   ),
 });
 
-type Room = { id: string; name: string; description: string | null; active: boolean };
+type Room = { id: string; name: string; description: string | null; is_active: boolean };
 type Member = {
   id: string;
   full_name: string | null;
@@ -40,7 +40,7 @@ function AdminPage() {
   async function loadRooms() {
     const { data, error } = await supabase
       .from("rooms")
-      .select("id, name, description, active")
+      .select("id, name, description, is_active")
       .order("name");
     if (error) toast.error("Erro ao carregar salas: " + error.message);
     else setRooms(data ?? []);
@@ -87,7 +87,7 @@ function AdminPage() {
   async function toggleRoomActive(room: Room) {
     const { error } = await supabase
       .from("rooms")
-      .update({ active: !room.active })
+      .update({ is_active: !room.is_active })
       .eq("id", room.id);
     if (error) toast.error(error.message);
     else void loadRooms();
@@ -176,7 +176,7 @@ function AdminPage() {
                       <div>
                         <span className="font-medium">{r.name}</span>
                         {r.description && <span className="ml-2 opacity-60">· {r.description}</span>}
-                        {!r.active && <span className="ml-2 text-xs opacity-60">(inativa)</span>}
+                        {!r.is_active && <span className="ml-2 text-xs opacity-60">(inativa)</span>}
                       </div>
                       <button
                         type="button"
@@ -184,7 +184,7 @@ function AdminPage() {
                         className="text-xs underline"
                         style={{ opacity: 0.7 }}
                       >
-                        {r.active ? "desativar" : "ativar"}
+                        {r.is_active ? "desativar" : "ativar"}
                       </button>
                     </li>
                   ))}

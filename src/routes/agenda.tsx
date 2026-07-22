@@ -62,7 +62,7 @@ function AgendaPage() {
     const { data, error } = await supabase
       .from("rooms")
       .select("id, name, description")
-      .eq("active", true)
+      .eq("is_active", true)
       .order("name");
     if (error) {
       toast.error("Erro ao carregar salas: " + error.message);
