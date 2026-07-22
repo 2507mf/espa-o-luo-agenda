@@ -95,6 +95,7 @@ export type Database = {
           ends_at: string
           status: Database["public"]["Enums"]["booking_status"]
           notes: string | null
+          plan_purchase_id: string | null
           created_at: string
         }
         Insert: {
@@ -105,6 +106,7 @@ export type Database = {
           ends_at: string
           status?: Database["public"]["Enums"]["booking_status"]
           notes?: string | null
+          plan_purchase_id?: string | null
           created_at?: string
         }
         Update: {
@@ -115,6 +117,7 @@ export type Database = {
           ends_at?: string
           status?: Database["public"]["Enums"]["booking_status"]
           notes?: string | null
+          plan_purchase_id?: string | null
           created_at?: string
         }
         Relationships: [
@@ -132,6 +135,120 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bookings_plan_purchase_id_fkey"
+            columns: ["plan_purchase_id"]
+            isOneToOne: false
+            referencedRelation: "plan_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plans: {
+        Row: {
+          id: string
+          room_id: string
+          name: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          price: number
+          units_included: number
+          unit: Database["public"]["Enums"]["plan_unit"]
+          validity_days: number | null
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          room_id: string
+          name: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          price: number
+          units_included: number
+          unit: Database["public"]["Enums"]["plan_unit"]
+          validity_days?: number | null
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          room_id?: string
+          name?: string
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          price?: number
+          units_included?: number
+          unit?: Database["public"]["Enums"]["plan_unit"]
+          validity_days?: number | null
+          is_active?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plans_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plan_purchases: {
+        Row: {
+          id: string
+          plan_id: string
+          user_id: string
+          created_by: string
+          price_paid: number
+          unit: Database["public"]["Enums"]["plan_unit"]
+          units_included: number
+          units_used: number
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          purchased_at: string
+          expires_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          plan_id: string
+          user_id: string
+          created_by: string
+          price_paid: number
+          unit: Database["public"]["Enums"]["plan_unit"]
+          units_included: number
+          units_used?: number
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          purchased_at?: string
+          expires_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          plan_id?: string
+          user_id?: string
+          created_by?: string
+          price_paid?: number
+          unit?: Database["public"]["Enums"]["plan_unit"]
+          units_included?: number
+          units_used?: number
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          purchased_at?: string
+          expires_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_purchases_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plan_purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
@@ -143,10 +260,27 @@ export type Database = {
         Args: { _user_id: string; _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
       }
+      book_plan_shift: {
+        Args: {
+          _plan_purchase_id: string
+          _room_id: string
+          _starts_at: string
+          _ends_at: string
+          _notes?: string | null
+        }
+        Returns: Database["public"]["Tables"]["bookings"]["Row"]
+      }
+      self_serve_purchase: {
+        Args: { _plan_id: string; _slots: Json; _notes?: string | null }
+        Returns: Database["public"]["Tables"]["plan_purchases"]["Row"]
+      }
     }
     Enums: {
       app_role: "admin" | "user"
       booking_status: "confirmed" | "cancelled"
+      plan_type: "combo" | "mensalista" | "turno_avulso" | "hora_avulsa"
+      plan_unit: "turno" | "hora"
+      payment_status: "pending" | "confirmed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -276,6 +410,9 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       booking_status: ["confirmed", "cancelled"],
+      plan_type: ["combo", "mensalista", "turno_avulso", "hora_avulsa"],
+      plan_unit: ["turno", "hora"],
+      payment_status: ["pending", "confirmed"],
     },
   },
 } as const
